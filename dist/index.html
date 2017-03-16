@@ -1,0 +1,67 @@
+<html>
+  <head>
+    <title>Embark</title>
+    <link rel="stylesheet" href="css/app.css">
+    <script src="js/app.js"></script>
+  </head>
+  <body>
+  	<div class="container">
+	    <h3>Welcome to Embark!</h3>
+	    <p>See the <a href="https://github.com/iurimatias/embark-framework/wiki">Wiki</a> to see what you can do with Embark!</p>
+
+	    <div>
+	    	Choose account : 
+	    	<select id="accselector">
+	    	</select>
+	    </div>
+
+	    <div>
+	    	Current Ethereum address : <span id="ethaddr">Loading...</span>
+	    </div>
+	    <div>
+	    	Current Balance : <span id="ethbal">Loading...</span>
+	    </div>
+	    <div>
+	    	Block Number : <span id="block"></span>
+	    </div>
+	    <br><br>
+	    <div>
+	    	In match : <span id="inmatch"></span>
+	    </div>
+
+	    <div>
+	    	Opponent Account : <span id="opponentHash"></span>
+	    </div>
+
+	    <div>
+	    	My match Hash : <span id="matchhash"></span>
+	    </div>
+
+	    <div>
+	    	My map : <span id="maphash"></span>
+	    </div>
+	    <div>
+	    	<input type="text" value="" placeholder="Stake..." id="stakeTxt" />
+	    	<button id="createMatchBtn">Create Match</button>
+		</div>
+		<div>
+	    	<input type="text" value="" placeholder="Match Hash..." id="matchhashTxt" />
+	    	<button id="joinMatchBtn">Join Match</button>
+		</div>
+		<div>
+	    	<button id="showMapBtn">Show Map</button><button id="startGameBtn">Start Game/Show Game UI</button>
+	    </div>
+	    <br>
+	    <div id="gameUI" class="hidden">
+	    	My Column : <input type="text" id="columnForMe" placeholder="Column For Me!"><br>
+	    	Op Column : <input type="text" id="columnForOp" placeholder="Column For Opponent!"><br>
+	    	<button id="sendMoveBtn">Send This Move</button>
+	    </div>
+	    <br>
+		<table class="table text-center" id="mapTable">
+		    <tbody >
+			</tbody>
+		</table>
+	</div>
+  </body>
+</html>
