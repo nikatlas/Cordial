@@ -14,7 +14,7 @@
 ## Clone : 
 
 ```
- git clone http://88.99.189.92:666/root/Padomima
+ git clone http://88.99.189.92:666/root/Padomima.git
  cd Padomima
 ```
 
