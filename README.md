@@ -1,5 +1,5 @@
- - Padomima 
- ---------------------------------------
+Padomima 
+--------
  
  Preqs : nodejs , embark 
 
@@ -19,8 +19,9 @@
 
  Run Geth :
  
-     General Structure
+    General Structure
     
+    ```
      sudo geth  --networkid 15532                       // Private chain on server network id
                 --password="/blockchains/privatekeys"   // Password files for avoiding typing
                 --datadir="/blockchains/private/"       // DATADIR to save the blockchain and the keystore (a.k.a. wallet)
@@ -33,9 +34,9 @@
                 --shh                                   // enable whisper
                 --unlock=0                              // Unlock account to be used without pass
                 console                                 // Enable console
-
+    ```
  
-     First Time Setup 
+    First Time Setup 
         
         Download and save genesis file from 
         
