@@ -69,17 +69,26 @@ contract Padomima {
   }
 
   function getMyStake() constant returns (uint){
+      if(!amInMatch())throw; 
       return Matches[PlayerBinding[msg.sender]].amount;
   }
 
   function getMyMatch() constant returns (bytes32 hash){
+      if(!amInMatch())throw;
       return PlayerBinding[msg.sender];
   }
   
   function getMyOpponent() constant returns (address hash){
+      if(!amInMatch())throw;
       Match m = Matches[PlayerBinding[msg.sender]];
       if( m.challenger == msg.sender )return m.creator;
       return m.challenger;
+  }
+  function getMapRotation() constant returns (uint8){
+    if(!amInMatch())throw;
+      Match m = Matches[PlayerBinding[msg.sender]];
+      if( m.challenger == msg.sender )return 1;
+      return 0;
   }
 
   function amInMatch() constant returns (bool){

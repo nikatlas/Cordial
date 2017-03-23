@@ -42,7 +42,7 @@ function createUI(){
 		updateUI(selectBox.value);
 	}
 	$("#showMapBtn").click(function(){
-		updateMapTable(calculateMapArray());
+		updateMapTable(web3.Game.getMapArray());
 	});
 
 	$("#createMatchBtn").click(function(){
@@ -60,12 +60,44 @@ function createUI(){
 		startGame();
 	});
 
-	$("#sendMoveBtn").click(function(){
-		sendMove();
+	$("#sendSelectMoveBtn").click(function(){
+		sendSelectMove();
+	});
+	$("#sendBetMoveBtn").click(function(){
+		sendBetMove();
+	});
+	$("#sendCallMoveBtn").click(function(){
+		sendCallMove();
+	});
+	$("#sendFoldMoveBtn").click(function(){
+		sendFoldMove();
+	});
+	$("#sendProofMoveBtn").click(function(){
+		sendProofMove();
 	});
 }
 function updateUI(accindex){
 	updateForAccount();
+}
+function updateGameUI(state){
+	$("#mycoins").html(state.coins[web3.eth.defaultAccount]);
+	$("#opcoins").html(state.coins[web3.eth.opponentAccount]);
+
+	$("#pot").html(state.pot);
+	$("#round").html(state.round);
+	
+	$("#mybets").html(state.bets[web3.eth.defaultAccount]);
+	$("#opbets").html(state.bets[web3.eth.opponentAccount]);
+
+	var sums = web3.Game.findSums();
+	$("#mysum").html(sums[web3.eth.defaultAccount]);
+	$("#opsum").html(sums[web3.eth.opponentAccount]);
+
+	updateMapTable(web3.Game.getMapArray(), state);
+	// console.log("Selected for me: ");
+	// console.log(state.selected[web3.eth.defaultAccount]);
+	// console.log("Selected for opponent: ");
+	// console.log(state.selected[web3.eth.opponentAccount]);
 }
 
 function updateForAccount(){
@@ -76,6 +108,8 @@ function updateForAccount(){
 
 	var blockNumber = web3.eth.blockNumber;
 	$("#block").html("#"+blockNumber);
+
+	dbname = web3.db.DBNAME = "CUSTOMDBFOR"+web3.eth.defaultAccount;
 
 	Padomima.amInMatch().then(function(res){
 		$("#inmatch").html(res? "Yes": "No");	
@@ -101,16 +135,46 @@ function updateForAccount(){
 	});
 }
 
-function updateMapTable(map){
+function updateMapTable(map,state){
+	if(typeof state == "undefined"){
+		state = {
+			selected:{
+				[web3.eth.defaultAccount]:[0,0,0,0,0,0],
+				[web3.eth.opponentAccount]:[0,0,0,0,0,0]
+			}
+		};
+	}
+	
+	state = web3.Game.applyStateRotation(state);
+
+
+
+
 	var mapTable = $("#mapTable")[0];
 	if(mapTable.hasChildNodes())
 		mapTable.removeChild(mapTable.children[0]);
 	var tbody = document.createElement("tbody");
 	for(var i=0;i<6;i++){
 		var tr = document.createElement("tr");
+		
+		if(state.selected[web3.eth.defaultAccount][i]){
+			$(tr).addClass("green"); 
+		}
 		for (var j = 0; j < 6; j++) {	
 			var td = document.createElement("td");
 			td.innerHTML = map[i][j];
+			if(web3.Game.haveSelected(j)){
+				$(td).addClass("green"); 
+			}
+			if(state.selected[web3.eth.opponentAccount][j]){
+				$(td).addClass("red"); 
+			}
+			if(web3.Game.isMyNumber(i,j)){
+				$(td).addClass("my-number");
+			}
+			if(web3.Game.isOpponentNumber(i,j)){
+				$(td).addClass("op-number");
+			}
 			tr.appendChild(td);
 		}
 		tbody.appendChild(tr);
@@ -121,58 +185,58 @@ function updateMapTable(map){
 /////////////////////
 //// CALCULATIONS ///
 /////////////////////
-function hashToNumbers(hash){
-	var nums = [];
-	hash = hash.substr(2);
-	for(var i=0;i<32;i++){
-		var b = hash.substr(2*i, 2*i+2);
-		nums.push(web3.toDecimal('0x'+b));
-	}
-	return nums;
-}
-/////////////////////
-function calculateMapArray(){
-	console.log("Calculating map array for map hash: " + maphash);
-	var first32Hash = maphash,
-	second32Hash 	= web3.sha3(first32Hash),
-	third32Hash		= web3.sha3(second32Hash);
-	// Make hash to numbers
-	var numbers 	= hashToNumbers(first32Hash)
-			  .concat(hashToNumbers(second32Hash))
-			  .concat(hashToNumbers(third32Hash));
+// function hashToNumbers(hash){
+// 	var nums = [];
+// 	hash = hash.substr(2);
+// 	for(var i=0;i<32;i++){
+// 		var b = hash.substr(2*i, 2*i+2);
+// 		nums.push(web3.toDecimal('0x'+b));
+// 	}
+// 	return nums;
+// }
+// /////////////////////
+// function calculateMapArray(){
+// 	console.log("Calculating map array for map hash: " + maphash);
+// 	var first32Hash = maphash,
+// 	second32Hash 	= web3.sha3(first32Hash),
+// 	third32Hash		= web3.sha3(second32Hash);
+// 	// Make hash to numbers
+// 	var numbers 	= hashToNumbers(first32Hash)
+// 			  .concat(hashToNumbers(second32Hash))
+// 			  .concat(hashToNumbers(third32Hash));
 
-	// init mapArray
-	var maparray = [];
-	for(var i=0;i<6;i++){
-		maparray.push([]);
-		for(var j=0;j<6;j++){
-			maparray[i][j] = i*6 + j + 1;
-		}
-	}
-	///
-	/// helper local swapPosition 
-	function swapPositions(a,b){
-		a  = a % 36
-		ai = a % 6;
-		aj = parseInt(a / 6);
+// 	// init mapArray
+// 	var maparray = [];
+// 	for(var i=0;i<6;i++){
+// 		maparray.push([]);
+// 		for(var j=0;j<6;j++){
+// 			maparray[i][j] = i*6 + j + 1;
+// 		}
+// 	}
+// 	///
+// 	/// helper local swapPosition 
+// 	function swapPositions(a,b){
+// 		a  = a % 36
+// 		ai = a % 6;
+// 		aj = parseInt(a / 6);
 		
-		b  = b % 36
-		bi = b % 6;
-		bj = parseInt(b / 6);
+// 		b  = b % 36
+// 		bi = b % 6;
+// 		bj = parseInt(b / 6);
 
-		var temp = maparray[ai][aj];
-		maparray[ai][aj] = maparray[bi][bj];
-		maparray[bi][bj] = temp;
-	}
-	///
-	for(var i=0;i<numbers.length;i++){
-		swapPositions(i, numbers[i]);
-	}
-	////////////////////////////////
-	console.log(maparray);
-	////////////////////////////////
-	return maparray;
-}
+// 		var temp = maparray[ai][aj];
+// 		maparray[ai][aj] = maparray[bi][bj];
+// 		maparray[bi][bj] = temp;
+// 	}
+// 	///
+// 	for(var i=0;i<numbers.length;i++){
+// 		swapPositions(i, numbers[i]);
+// 	}
+// 	////////////////////////////////
+// 	console.log(maparray);
+// 	////////////////////////////////
+// 	return maparray;
+// }
 
 
 
@@ -220,17 +284,11 @@ function getMap(){
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-
+ 
 ///////////////////////////////////////////////////////////////////
 ///////////  START GAME PHASE   ///////////////////////////////////
 ///////////////////////////////////////////////////////////////////
-web3.db.getString = function(a,k){
-	localStorage[k];
-}
-web3.db.putString = function(a,k,v){
-	localStorage.setItem(k,v);	
-}
-var dbname = "CUSTOMDBFORME";
+var dbname = web3.db.DBNAME = "CUSTOMDBFOR"+web3.eth.defaultAccount;
 function getDB(key){
 	return web3.db.getString(dbname,key);
 }
@@ -238,6 +296,7 @@ function getDBJSON(key){
 	return JSON.parse(web3.db.getString(dbname,key));
 }
 function saveDBJSON(d){
+	return;
 	if(!web3.db.getString(dbname,"currentIndex"))
 		web3.db.putString(dbname,"currentIndex","0");
 	var cid = getDB("currentIndex");
@@ -268,47 +327,65 @@ function saveOpponentMove(data){
 
 
 function moveRecieved(data){
-	if(data.who != opAccount)return;
-	if(!web3.NetLib.verifyMessage(data))return;
-	
-	if(data.ACK){
-		console.log("Recieved ACK!");
-		saveACK(data);
-		return;
-	}
-
 	console.log("Recieved Data from Game Channel:");
 	console.log(data);
 
-
-	web3.NetLib.sendACK(data);
-
-
-	saveOpponentMove(data);
-	return;
+	if(web3.Game.performMove(data))
+		return data;
+	//web3.Game.communicateState();
+	return false;
 }
+
+function stateHandler(){
+	console.log("State changed!");
+	console.log(web3.Game.getState());
+	updateGameUI(web3.Game.getState());
+}
+function roundHandler(){
+	console.log("Round changed!");
+	updateGameUI(web3.Game.getState());
+}
+
 function startGame() {
 	// body...
-	$("#gameUI").removeClass("hidden");
+	$("#GameUI").removeClass("hidden");
 	// Establish whisper connection //
 	// web3.Lib.initWhisper(maphash.substr(2))
 	// 		.then(function(w){
 	// 			w.setFunction(moveRecieved);
 	// 			web3.GWhisper = w;
 	// 		});
+	web3.NetLib.init();
 	web3.NetLib.setChannel(maphash.substr(2));
 	web3.NetLib.setSolo(web3.eth.opponentAccount);
-	web3.NetLib.startListening(moveRecieved);
+	//web3.NetLib.addInterceptor(web3.Game.getStateInterceptor());
+	web3.NetLib.setSoloInterceptor();
+	web3.NetLib.setProofInterceptor();
+	
+	web3.NetLib.addInterceptor(moveRecieved);
+
+	web3.NetLib.startListening();
+	web3.Game.init(maphash);
+	web3.Game.setOnStateChange(stateHandler);
+	web3.Game.setOnRoundChange(roundHandler);
+	Padomima.getMapRotation().then(function(res){
+		web3.Game.setMapRotation(res);
+		updateMapTable(web3.Game.getMapArray());
+		web3.Game.loadFromDB();
+		updateGameUI(web3.Game.getState());
+	});
 }
 
-function sendMove(){
+function sendSelectMove(){
 	var mycol = parseInt($("#columnForMe").val())-1;
 	var opcol = parseInt($("#columnForOp").val())-1;
 
-	var mycolR = findRandomBigNumber(mycol);
-	var opcolR = findRandomBigNumber(opcol);
-	var move = web3.sha3(''+mycolR).substr(2) + "+" + web3.sha3(''+opcolR).substr(2);
-	var moveSignature = web3.Lib.signData(web3.eth.defaultAccount, move);
+	var move = web3.Game.createSelectMove(mycol,opcol);
+	web3.Game.performMove(move.move);
+	web3.NetLib.sendPacketWaitForVerification(move.move);
+	web3.Game.saveProof(move.proof.data.selectIndex % 4, move.proof);
+	// var move = web3.sha3(''+mycolR).substr(2) + "+" + web3.sha3(''+opcolR).substr(2);
+	// var moveSignature = web3.Lib.signData(web3.eth.defaultAccount, move);
 	
 	// console.log("Move Signature : ");
 	// console.log(moveSignature);
@@ -318,7 +395,29 @@ function sendMove(){
 	// console.log(ver);
 
 	// Send through Whisper
-	web3.GWhisper.send({ who: web3.eth.defaultAccount, signature : moveSignature })
+	//web3.GWhisper.send({ who: web3.eth.defaultAccount, signature : moveSignature })
+}
+function sendBetMove(){
+	var am = parseInt($("#amount").val());
+	var move = web3.Game.createBetMove(am);
+	if(web3.Game.performMove(move))
+		web3.NetLib.sendPacketWaitForVerification(move);
+}
+function sendCallMove(){
+	var move = web3.Game.createCallMove();
+	if(web3.Game.performMove(move))
+		web3.NetLib.sendPacketWaitForVerification(move);
+}
+function sendFoldMove(){
+	var move = web3.Game.createFoldMove();
+	if(web3.Game.performMove(move))
+		web3.NetLib.sendPacketWaitForVerification(move);
+}
+function sendProofMove(){
+	var proofnum = parseInt($("#proofCol").val());
+	var move = web3.Game.getProofMove(proofnum);
+	if(web3.Game.performMove(move))
+		web3.NetLib.sendPacketWaitForVerification(move);
 }
 
 

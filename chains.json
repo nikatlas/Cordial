@@ -156,5 +156,18 @@
         "name":    "Padomima"
       }
     }
+  },
+  "0xe5be92145a301820111f91866566e3e99ee344d155569e4556a39bc71238f3bc": {
+    "name": "development",
+    "contracts": {
+      "0x1f8bfd35654f756a6d7d28cc00e8883f54d1e779c4cbe706981e7c3607ce28d4": {
+        "address": "0x62e4982488cf2fbf044a419540dba37bc9094dc6",
+        "name":    "Padomima"
+      },
+      "0x3ebac3f6b3e659be6306ecd485ca6328e2078e6ca987f9f296666acf3cffa536": {
+        "address": "0x8e54ad27382e8aa07989cf8284802cb77a19c912",
+        "name":    "Padomima"
+      }
+    }
   }
 }

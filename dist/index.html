@@ -52,16 +52,86 @@
 	    	<button id="showMapBtn">Show Map</button><button id="startGameBtn">Start Game/Show Game UI</button>
 	    </div>
 	    <br>
-	    <div id="gameUI" class="hidden">
-	    	My Column : <input type="text" id="columnForMe" placeholder="Column For Me!"><br>
-	    	Op Column : <input type="text" id="columnForOp" placeholder="Column For Opponent!"><br>
-	    	<button id="sendMoveBtn">Send This Move</button>
-	    </div>
 	    <br>
-		<table class="table text-center" id="mapTable">
-		    <tbody >
-			</tbody>
-		</table>
+	    <div id="GameUI" class="hidden">
+	    	<div>
+	    		<div>
+	    			Coins : <span id="mycoins"></span>
+	    		</div>
+	    		<div>
+	    			OpCoins : <span id="opcoins"></span>
+	    		</div>
+	    		<div>
+	    			Pot : <span id="pot"></span>
+	    		</div>
+	    		<div>
+	    			Round : <span id="round"></span>
+	    		</div>
+	    		<div>
+	    			myBets : <span id="mybets"></span>
+	    		</div>
+	    		<div>
+	    			opBets : <span id="opbets"></span>
+	    		</div>
+	    		<div>
+	    			mySum : <span id="mysum"></span>
+	    		</div>
+	    		<div>
+	    			opSum : <span id="opsum"></span>
+	    		</div>
+	    	</div>
+			<table class="table">
+			    <tbody >
+			    	<tr>
+			    		<td>
+				    		<input type="text" id="columnForMe" placeholder="Column For Me!">
+				    	</td>
+				    	<td>
+				    		<input type="text" id="columnForOp" placeholder="Column For Opponent!">
+				    	</td>
+				    	<td>
+				    		<button id="sendSelectMoveBtn">Send SELECT Move</button>
+				    	</td>
+			    	</tr>
+			    	<tr>
+			    		<td>
+							<input type="text" id="amount" placeholder="Amount to bet!">
+						</td>
+						<td></td>
+						<td>
+							<button id="sendBetMoveBtn">Send BET Move</button>
+						</td>
+			    	</tr>
+			    	<tr>
+			    		<td></td>
+						<td></td>
+						<td>
+							<button id="sendCallMoveBtn">Send CALL Move</button>
+						</td>
+			    	</tr>
+			    	<tr>
+			    		<td></td>
+						<td></td>
+						<td>
+							<button id="sendFoldMoveBtn">Send FOLD Move</button>
+						</td>
+			    	</tr>
+			    	<tr>
+			    		<td>
+			    			<input type="text" id="proofCol" placeholder="Proof For move!">
+			    		</td>
+						<td></td>
+						<td>
+							<button id="sendProofMoveBtn">Send Proof Move</button>
+						</td>
+			    	</tr>
+				</tbody>
+			</table>
+			<table class="table text-center" id="mapTable">
+			    <tbody >
+				</tbody>
+			</table>
+		</div>
 	</div>
   </body>
 </html>

@@ -11,11 +11,11 @@
 	}
 
 	web3.Lib.signData = function(acc, data){
-		var hash = web3.sha3(data);
-	    var signed = web3.eth.sign(acc, web3.toHex(data));
+		var hash = web3.sha3(JSON.stringify(data));
+	    var signed = web3.eth.sign(acc, web3.toHex(JSON.stringify(data)));
 	    console.log("Requested sign by account : " + acc); 
 	    return {
-	    	data     : data,
+	    	data     : JSON.stringify(data),
 	    	dataHash : hash,
 	    	signature: signed
 	    };
@@ -35,16 +35,16 @@
 
 	// CHANGE web3.db to localStorage!!!
 	web3.db.getString = function(a,k){
-		localStorage[k];
+		return localStorage[a+k];
 	}
 	web3.db.putString = function(a,k,v){
-		localStorage.setItem(k,v);	
+		localStorage.setItem(a+k,v);	
 	}
 	////////////////////////////////
 	web3.Lib.DB = {
 		_dbname : "defaultDBName",
 		setJSON : function(k,d){
-			web3.db.putString(this._dbname, k, JSON.stringify(d);
+			web3.db.putString(this._dbname, k, JSON.stringify(d));
 		},
 		getSON : function(d){
 			return JSON.parse(web3.db.getString(this._dbname,d));

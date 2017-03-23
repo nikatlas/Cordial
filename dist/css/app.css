@@ -1,3 +1,18 @@
+
+
+.red{
+	background-color:rgba(255,10,30,0.7);
+}
+.green{
+	background-color:rgba(80, 220, 50, 0.7);
+}
+.my-number{
+	background-color:rgba(0, 115, 00, 0.99) !important;
+	color: white;
+}
+.op-number{
+	background-color:rgba(135, 0, 00, 0.99) !important;
+}
 /*!
  * Bootstrap v3.3.6 (http://getbootstrap.com)
  * Copyright 2011-2015 Twitter, Inc.
