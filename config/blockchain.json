@@ -7,7 +7,7 @@
     "nodiscover": true,
     "maxpeers": 0,
     "rpcHost": "localhost",
-    "rpcPort": 8545,
+    "rpcPort": 15533,
     "rpcCorsDomain": "http://localhost:8000",
     "account": {
       "password": "config/development/password"
@@ -30,9 +30,9 @@
   "privatenet": {
     "networkType": "custom",
     "rpcHost": "localhost",
-    "rpcPort": 8545,
+    "rpcPort": 15533,
     "datadir": "yourdatadir",
-    "networkId": "123",
+    "networkId": "15532",
     "nodes": []
   }
 }

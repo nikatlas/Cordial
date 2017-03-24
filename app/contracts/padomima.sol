@@ -96,8 +96,6 @@ contract Padomima {
   }
 
 
-
-
   function sig_verify(bytes32 hash, bytes sig) constant returns(address)                       //verifying the signature
   {
       bytes32 r;
@@ -114,4 +112,8 @@ contract Padomima {
 
       return ecrecover(hash, v, r, s);
   }
+}
+
+contract Move {
+  string tyape;
 }
