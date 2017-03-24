@@ -77,7 +77,7 @@
 			      console.log("[!] --> No Whisper - no communication");
 			      reject(err);
 			    } else {
-			      	EmbarkJS.Messages.setProvider('whisper');
+			      	//EmbarkJS.Messages.setProvider('whisper');
 			      	if(fn){
 			      		_setFunction(fn);
 			      	}

@@ -242,19 +242,20 @@ function updateMapTable(map,state){
 
 ///////////////////// CUSTOM NET ////
 function createMatch(stake){
-	var createMatchData = Padomima.createMatch.getData();
+	var createMatchData = Padomima.createMatch({value: web3.toWei(stake, 'ether'), gas: 2255200});
 	console.log(createMatchData);
-	return web3.eth.sendTransaction({
-		'from': web3.eth.defaultAccount,
-		'contractAddress': Padomima.address,
-		'to': Padomima.address,
-		'value':web3.toWei(stake, 'ether'),
-		'data': createMatchData,
-		'gas': 4000000
-	});
+	return createMatchData;
+	//return web3.eth.sendTransaction({
+	// 	'from': web3.eth.defaultAccount,
+	// 	'contractAddress': Padomima.address,
+	// 	'to': Padomima.address,
+	// 	'value':web3.toWei(stake, 'ether'),
+	// 	'data': createMatchData,
+	// 	'gas': 4000000
+	// });
 }
 function joinMatch(stake, h){
-	var joinMatchData = Padomima.joinMatch.getData(h);
+	var joinMatchData = Padomima.joinMatch(h , {value: web3.toWei(stake, 'ether'), gas: 2255200});
 	console.log(joinMatchData);
 	return web3.eth.sendTransaction({
 		'from': web3.eth.defaultAccount,
