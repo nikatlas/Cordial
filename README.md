@@ -52,7 +52,7 @@ wget http://88.99.189.92/genesis/privategenesis
 ```
     sudo geth  --networkid 15532 --password="/blockchains/privatekeys" --datadir="/blockchains/private/"  init GENESISFILE
     sudo geth  --networkid 15532 --password="/blockchains/privatekeys" --datadir="/blockchains/private/"  account new
-    sudo geth  --networkid 15532 --password="/blockchains/privatekeys" --datadir="/blockchains/private/" --port 15532 --rpc --rpcapi "eth,web3,shh" --rpcport 15533 --rpcaddr localhost --rpccorsdomain="http://localhost:8000" --shh --unlock=0 
+    sudo geth  --networkid 15532 --password="/blockchains/privatekeys" --datadir="/blockchains/private/" --port 15532 --rpc --rpcapi "eth,web3,shh" --rpcport 15533 --rpcaddr localhost --rpccorsdomain="http://localhost:8000" --shh --unlock=0 --bootnodes "enode://72e1359f99430b52ef9fcb722c40ef863c1b163155b032c34d6ffef6d5b558b1f65a94e8ded0a2bcbaaf315fe946ab4a17d25adea4ebeef9e498deded25c1830@88.99.189.92:15532"
 ```
 
 You should see geth initialization and console waiting commands
@@ -71,7 +71,7 @@ Now you should see the blockchain synchronization!
 Just start geth with the appropriate parameters 
     
 ```
-    sudo geth  --networkid 15532 --password="/blockchains/privatekeys" --datadir="/blockchains/private/" --port 15532 --rpc --rpcapi "eth,web3,shh" --rpcport 15533 --rpcaddr localhost --rpccorsdomain="http://localhost:8000" --shh --unlock=0 
+    sudo geth  --networkid 15532 --password="/blockchains/privatekeys" --datadir="/blockchains/private/" --port 15532 --rpc --rpcapi "eth,web3,shh" --rpcport 15533 --rpcaddr localhost --rpccorsdomain="http://localhost:8000" --shh --unlock=0 --bootnodes "enode://72e1359f99430b52ef9fcb722c40ef863c1b163155b032c34d6ffef6d5b558b1f65a94e8ded0a2bcbaaf315fe946ab4a17d25adea4ebeef9e498deded25c1830@88.99.189.92:15532"
 ```
     
 
