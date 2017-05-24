@@ -1,14 +1,11 @@
 (function(){
+	/// CONSISTENCY ///
 	var RESENDTIME = 2000;
 	function resendOnFail(){
 		setTimeout(resendOnFail, RESENDTIME);
-		// var length = Object.keys(myClass._ACKs).length;
-		// for(var i in myClass._ACKs){
-		// 	myClass.sendPacket(myClass._ACKs[i]);
-		// }
 		myClass.queue.trySend();
-
 	};
+
 	var randomNumber = parseInt(Math.random() * 100000.0);
 	console.log(randomNumber);
 	var myClass = {
@@ -34,22 +31,7 @@
 				var hash = web3.sha3(data.signature.data); // already stringified!
 				//console.log(hash);
 				return hash;
-			},
-			recievedACK : function(data){
-				if(data.ACK){
-					//console.log("Testing recieved ACK : " + data.signature.data.ackSignature);
-					if(data.signature.data.ackSignature == this._getHash()){
-						//save ACK in stack
-						var item = this._queue.shift();
-						console.log("recievedACK for : " + data.signature.data.ackSignature);
-						console.log(this._queue);
-						return item;
-					}	
-				}
-
-				return false;
 			}
-
 		},
 		sockets : {},		
 		_channel: "defaultGAMECHANNEL1",
@@ -72,17 +54,25 @@
 		__soloInterceptor : function(data){
 			if(this._solo && data.who != this._address)return false;
 			if(!this.verifyMessage(data)){
-				console.log("Verification Failed for:");
-				console.log(data);
+				//console.log("Verification Failed for:");
+				//console.log(data);
 				return false;
 			}
 			// parse Data !!! 
 			data.signature.data = JSON.parse(data.signature.data);
-			if(data.ACK){
-				this.queue.recievedACK(data);
-			}
 			return data;
 			// 
+		},
+		__ACKInterceptor  : function(data){
+			if(data.ACK){
+				if(data.signature.data.ackSignature == this._getHash()){
+					var item = this.queue._queue.shift();
+					console.log("recievedACK for : " + data.signature.data.ackSignature);
+					console.log(this.queue._queue);
+					return false;
+				}	
+			}
+			return false;
 		},
 		__proofInterceptor : function(data){
 			if(data.signature.data.proof){
@@ -126,12 +116,21 @@
 		setSoloInterceptor : function(){
 			this._interceptors.push(this.__soloInterceptor);
 		},
+		setACKInterceptor : function(){
+			this._interceptors.push(this.__ACKInterceptor);
+		},
 		setProofInterceptor : function(){
 			this._interceptors.push(this.__proofInterceptor);
 		},
 		setSaveInterceptor : function(){
 			this._interceptors.push(this.__saveDataInterceptor);
 		},
+		setBasicInterceptors : function(){
+			this.setSoloInterceptor();
+			this.setACKInterceptor();
+			this.setProofInterceptor();
+			// this.setSaveInterceptor(); // TODO
+		}
 		addInterceptor 		: function(fn){
 			this._interceptors.push(fn);
 		},

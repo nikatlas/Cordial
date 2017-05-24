@@ -242,29 +242,12 @@ function updateMapTable(map,state){
 
 ///////////////////// CUSTOM NET ////
 function createMatch(stake){
-	var createMatchData = Padomima.createMatch({value: web3.toWei(stake, 'ether'), gas: 2255200});
-	console.log(createMatchData);
+	var createMatchData = Padomima.createMatch({value: web3.toWei(stake, 'ether'), gas: 200000});
 	return createMatchData;
-	//return web3.eth.sendTransaction({
-	// 	'from': web3.eth.defaultAccount,
-	// 	'contractAddress': Padomima.address,
-	// 	'to': Padomima.address,
-	// 	'value':web3.toWei(stake, 'ether'),
-	// 	'data': createMatchData,
-	// 	'gas': 4000000
-	// });
 }
 function joinMatch(stake, h){
-	var joinMatchData = Padomima.joinMatch(h , {value: web3.toWei(stake, 'ether'), gas: 2255200});
-	console.log(joinMatchData);
-	return web3.eth.sendTransaction({
-		'from': web3.eth.defaultAccount,
-		'contractAddress': Padomima.address,
-		'to': Padomima.address,
-		'value':web3.toWei(stake, 'ether'),
-		'data': joinMatchData,
-		'gas': 4000000
-	});
+	var joinMatchData = Padomima.joinMatch(h , {value: web3.toWei(stake, 'ether'), gas: 200000});
+	return joinMatchData;
 }
 
 function getMatch(){
@@ -360,8 +343,7 @@ function startGame() {
 	web3.NetLib.setChannel(maphash.substr(2));
 	web3.NetLib.setSolo(web3.eth.opponentAccount);
 	//web3.NetLib.addInterceptor(web3.Game.getStateInterceptor());
-	web3.NetLib.setSoloInterceptor();
-	web3.NetLib.setProofInterceptor();
+	web3.NetLib.setBasicInterceptors();
 	
 	web3.NetLib.addInterceptor(moveRecieved);
 
