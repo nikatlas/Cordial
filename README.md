@@ -1,4 +1,4 @@
-# Padomima 
+# Cordial 
 
 
 
@@ -9,13 +9,6 @@
  sudo apt-get install nodejs 
  sudo apt-get install npm
  sudo apt-get install embark
-```
-
-## Clone : 
-
-```
- git clone http://88.99.189.92:666/root/Padomima.git
- cd Padomima
 ```
 
 
